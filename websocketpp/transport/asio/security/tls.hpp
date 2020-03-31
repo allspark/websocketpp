@@ -193,14 +193,14 @@ protected:
         if (!m_context) {
             return socket::make_error_code(socket::error::invalid_tls_context);
         }
-        m_socket.reset(new socket_type(*service, *m_context));
+        m_socket = lib::make_shared<socket_type>(*service, *m_context);
 
         if (m_socket_init_handler) {
             m_socket_init_handler(m_hdl, get_socket());
         }
 
         m_io_service = service;
-        m_strand = strand;
+        m_strand = std::move(strand);
         m_is_server = is_server;
 
         return lib::error_code();
